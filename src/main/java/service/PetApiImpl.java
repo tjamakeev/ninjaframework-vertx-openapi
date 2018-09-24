@@ -1,4 +1,4 @@
-package org.openapitools.server.api.verticle;
+package service;
 
 
 import java.io.File;
@@ -6,11 +6,13 @@ import java.util.List;
 
 import org.openapitools.server.api.model.ModelApiResponse;
 import org.openapitools.server.api.model.Pet;
+import org.openapitools.server.api.verticle.PetApi;
+
+import com.google.inject.Inject;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import lombok.extern.slf4j.Slf4j;
-import service.HelloService;
 
 
 @Slf4j
@@ -19,6 +21,7 @@ public class PetApiImpl implements PetApi
     private HelloService helloService;
 
 
+    @Inject
     public PetApiImpl( final HelloService helloService )
     {
         this.helloService = helloService;
@@ -57,6 +60,7 @@ public class PetApiImpl implements PetApi
     public void getPetById( final Long petId, final Handler<AsyncResult<Pet>> handler )
     {
         helloService.hello( String.valueOf( petId ) );
+
         handler.handle( new AsyncResult<Pet>()
         {
             @Override

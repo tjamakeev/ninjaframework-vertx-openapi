@@ -1,27 +1,30 @@
-package org.openapitools.server.api.verticle;
+package service;
 
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.openapitools.server.api.model.User;
+import org.openapitools.server.api.verticle.UserApi;
 
+import com.google.inject.Inject;
+
+import exception.AuthenticationException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import service.HelloService;
 
 
 public class UserApiImpl implements UserApi
 {
-    private final HelloService helloService;
+    private final AuthenticationService authenticationService;
 
 
-    public UserApiImpl( final HelloService helloService )
+    @Inject
+    public UserApiImpl( final AuthenticationService authenticationService )
     {
-        this.helloService = helloService;
+        this.authenticationService = authenticationService;
     }
 
 
@@ -63,14 +66,21 @@ public class UserApiImpl implements UserApi
     @Override
     public void loginUser( final String username, final String password, final Handler<AsyncResult<String>> handler )
     {
-        helloService.hello( username );
         handler.handle( new AsyncResult<String>()
         {
             @Override
             public String result()
             {
                 Map<String, String> result = new LinkedHashMap<>();
-                result.put( "token", UUID.randomUUID().toString() );
+                try
+                {
+                    result.put( "token", authenticationService.authenticate( username, password ) );
+                }
+                catch ( AuthenticationException e )
+                {
+                    return null;
+                }
+
                 return JsonObject.mapFrom( result ).encode();
             }
 

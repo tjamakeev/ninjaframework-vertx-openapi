@@ -4,12 +4,15 @@ package org.openapitools.server.api.verticle;
 import org.openapitools.server.api.MainApiException;
 import org.openapitools.server.api.model.Order;
 
+import com.google.inject.Inject;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import service.StoreApiImpl;
 
 
 public class StoreApiVerticle extends AbstractVerticle
@@ -29,7 +32,7 @@ public class StoreApiVerticle extends AbstractVerticle
         try
         {
             Class serviceImplClass =
-                    getClass().getClassLoader().loadClass( "org.openapitools.server.api.verticle.StoreApiImpl" );
+                    getClass().getClassLoader().loadClass( "service.StoreApiImpl" );
             service = ( StoreApi ) serviceImplClass.newInstance();
         }
         catch ( Exception e )
@@ -40,7 +43,8 @@ public class StoreApiVerticle extends AbstractVerticle
     }
 
 
-    public StoreApiVerticle( final StoreApi storeApi )
+    @Inject
+    public StoreApiVerticle( final StoreApiImpl storeApi )
     {
         service = storeApi;
     }

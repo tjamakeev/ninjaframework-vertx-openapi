@@ -6,6 +6,8 @@ import java.util.List;
 import org.openapitools.server.api.MainApiException;
 import org.openapitools.server.api.model.User;
 
+import com.google.inject.Inject;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
@@ -13,6 +15,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import service.UserApiImpl;
 
 
 public class UserApiVerticle extends AbstractVerticle
@@ -36,7 +39,7 @@ public class UserApiVerticle extends AbstractVerticle
         try
         {
             Class serviceImplClass =
-                    getClass().getClassLoader().loadClass( "org.openapitools.server.api.verticle.UserApiImpl" );
+                    getClass().getClassLoader().loadClass( "service.UserApiImpl" );
             service = ( UserApi ) serviceImplClass.newInstance();
         }
         catch ( Exception e )
@@ -47,7 +50,8 @@ public class UserApiVerticle extends AbstractVerticle
     }
 
 
-    public UserApiVerticle( final UserApi userApi )
+    @Inject
+    public UserApiVerticle( final UserApiImpl userApi )
     {
         service = userApi;
     }

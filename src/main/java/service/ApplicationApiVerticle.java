@@ -6,26 +6,34 @@ import org.openapitools.server.api.verticle.PetApiVerticle;
 import org.openapitools.server.api.verticle.StoreApiVerticle;
 import org.openapitools.server.api.verticle.UserApiVerticle;
 
+import com.google.inject.Inject;
+
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 import lombok.extern.slf4j.Slf4j;
+import ninja.utils.NinjaProperties;
 
 
 @Slf4j
 public class ApplicationApiVerticle extends MainApiVerticle
 {
-    private final UserApiVerticle userApiVerticle;
-    private final PetApiVerticle petApiVerticle;
-    private final StoreApiVerticle storeApiVerticle;
+    @Inject
+    private UserApiVerticle userApiVerticle;
 
 
-    public ApplicationApiVerticle( final Vertx vertx, final PetApiVerticle petApiVerticle,
-                                   final UserApiVerticle userApiVerticle, final StoreApiVerticle storeApiVerticle )
+    @Inject
+    private NinjaProperties ninjaProperties;
+
+    @Inject
+    private PetApiVerticle petApiVerticle;
+
+    @Inject
+    private StoreApiVerticle storeApiVerticle;
+
+
+    @Override
+    public int getServerPort()
     {
-        this.vertx = vertx;
-        this.petApiVerticle = petApiVerticle;
-        this.userApiVerticle = userApiVerticle;
-        this.storeApiVerticle = storeApiVerticle;
+        return ninjaProperties.getIntegerOrDie( "vertx.port" );
     }
 
 

@@ -1,4 +1,4 @@
-package org.openapitools.server.api.verticle;
+package service;
 
 
 import java.util.HashMap;
@@ -6,21 +6,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.openapitools.server.api.model.Order;
+import org.openapitools.server.api.verticle.StoreApi;
+
+import com.google.inject.Inject;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import service.HelloService;
 
 
 public class StoreApiImpl implements StoreApi
 {
-    private final HelloService helloService;
-
-
-    public StoreApiImpl( final HelloService helloService )
-    {
-        this.helloService = helloService;
-    }
+    @Inject
+    private HelloService helloService;
 
 
     @Override

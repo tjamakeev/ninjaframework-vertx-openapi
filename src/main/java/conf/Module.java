@@ -19,6 +19,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 
 import lombok.extern.slf4j.Slf4j;
+import service.ApplicationApiVerticle;
+import service.ApplicationStartup;
 
 
 @Slf4j
@@ -27,9 +29,12 @@ public class Module extends AbstractModule
 {
 
 
+    private ApplicationApiVerticle applicationApiVerticle;
+
+
     protected void configure()
     {
         // bind your injections here!
-        install( new VertxModule() );
+        bind( ApplicationStartup.class );
     }
 }

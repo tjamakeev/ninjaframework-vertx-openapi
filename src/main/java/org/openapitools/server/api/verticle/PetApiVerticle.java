@@ -7,6 +7,8 @@ import java.util.List;
 import org.openapitools.server.api.MainApiException;
 import org.openapitools.server.api.model.Pet;
 
+import com.google.inject.Inject;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.Json;
@@ -14,6 +16,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import service.PetApiImpl;
 
 
 public class PetApiVerticle extends AbstractVerticle
@@ -36,8 +39,7 @@ public class PetApiVerticle extends AbstractVerticle
     {
         try
         {
-            Class serviceImplClass =
-                    getClass().getClassLoader().loadClass( "org.openapitools.server.api.verticle.PetApiImpl" );
+            Class serviceImplClass = getClass().getClassLoader().loadClass( "service.PetApiImpl" );
             service = ( PetApi ) serviceImplClass.newInstance();
         }
         catch ( Exception e )
@@ -48,7 +50,8 @@ public class PetApiVerticle extends AbstractVerticle
     }
 
 
-    public PetApiVerticle( final PetApi petApi )
+    @Inject
+    public PetApiVerticle( final PetApiImpl petApi )
     {
         service = petApi;
     }
