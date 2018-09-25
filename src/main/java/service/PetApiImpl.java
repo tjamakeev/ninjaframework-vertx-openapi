@@ -4,6 +4,7 @@ package service;
 import java.io.File;
 import java.util.List;
 
+import org.openapitools.server.api.MainApiException;
 import org.openapitools.server.api.model.ModelApiResponse;
 import org.openapitools.server.api.model.Pet;
 import org.openapitools.server.api.verticle.PetApi;
@@ -11,6 +12,7 @@ import org.openapitools.server.api.verticle.PetApi;
 import com.google.inject.Inject;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,42 +59,22 @@ public class PetApiImpl implements PetApi
 
 
     @Override
-    public void getPetById( final Long petId, final Handler<AsyncResult<Pet>> handler )
+    public void getPetById( final Long petId, final Handler<AsyncResult<Pet>> resultHandler )
     {
         helloService.hello( String.valueOf( petId ) );
 
-        handler.handle( new AsyncResult<Pet>()
+        if ( petId == 1 )
         {
-            @Override
-            public Pet result()
-            {
-                Pet pet = new Pet();
-                pet.setId( petId );
-                pet.setName( "Cat" );
-                return pet;
-            }
+            Pet pet = new Pet();
+            pet.setId( petId );
+            pet.setName( "Cat" );
 
-
-            @Override
-            public Throwable cause()
-            {
-                return null;
-            }
-
-
-            @Override
-            public boolean succeeded()
-            {
-                return true;
-            }
-
-
-            @Override
-            public boolean failed()
-            {
-                return false;
-            }
-        } );
+            resultHandler.handle( Future.succeededFuture( pet ) );
+        }
+        else
+        {
+            resultHandler.handle( Future.failedFuture( new MainApiException( 404, "Pet not found." ) ) );
+        }
     }
 
 
